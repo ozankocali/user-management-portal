@@ -49,7 +49,7 @@ public class JWTTokenProvider {
 
     public boolean isTokenValid(String username,String token){
         JWTVerifier jwtVerifier=getJWTVerifier();
-        return StringUtils .isNotEmpty(username)&& !isTokenExpired(jwtVerifier,token);
+        return StringUtils.isNotEmpty(username)&& !isTokenExpired(jwtVerifier,token);
     }
 
     public String getSubject(String token){
