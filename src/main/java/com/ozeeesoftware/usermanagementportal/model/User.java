@@ -39,7 +39,7 @@ public class User implements Serializable {
 
     private Date joinDate;
 
-    private String[] roles;
+    private String role;
 
     private String[] authorities;
 
