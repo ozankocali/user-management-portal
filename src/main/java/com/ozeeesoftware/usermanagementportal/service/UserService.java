@@ -5,11 +5,12 @@ import com.ozeeesoftware.usermanagementportal.exception.model.UserNotFoundExcept
 import com.ozeeesoftware.usermanagementportal.exception.model.UsernameExistsException;
 import com.ozeeesoftware.usermanagementportal.model.User;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface UserService {
 
-    User register(String firstName, String lastName, String username, String email) throws UsernameExistsException, UserNotFoundException, EmailExistsException;
+    User register(String firstName, String lastName, String username, String email) throws UsernameExistsException, UserNotFoundException, EmailExistsException, MessagingException;
 
     List<User> getUsers();
 
