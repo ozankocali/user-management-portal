@@ -1,0 +1,409 @@
+{
+	"info": {
+		"_postman_id": "31e8eb65-335b-422d-9e62-8e23498ff6db",
+		"name": "UserManagementPortal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"john\",\r\n    \"lastName\":\"doe\",\r\n    \"username\":\"johnDoe\",\r\n    \"email\":\"johndoe@hotmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user's default profile image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/image/profile/johnDoe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"image",
+						"profile",
+						"johnDoe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"johnDoe\",\r\n    \"password\":\"ogMfccL8Wk\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "firstName",
+							"value": "john",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "cena",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "johncena@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "ROLE_USER",
+							"type": "text"
+						},
+						{
+							"key": "isActive",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "isNonLocked",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "profileImage",
+							"type": "file",
+							"src": "/C:/Users/ozank/Downloads/190px-Cena_March_2018_(cropped).jpg"
+						},
+						{
+							"key": "username",
+							"value": "johnCena",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user's custom profile image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/image/johnDoe/johnDoe.jpg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"image",
+						"johnDoe",
+						"johnDoe.jpg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "firstName",
+							"value": "John",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "Cena",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "johncena@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "ROLE_USEr",
+							"type": "text"
+						},
+						{
+							"key": "isActive",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "isNonLocked",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "profileImage",
+							"type": "file",
+							"src": "/C:/Users/ozank/Downloads/190px-Cena_March_2018_(cropped).jpg"
+						},
+						{
+							"key": "username",
+							"value": "johnCena",
+							"type": "text"
+						},
+						{
+							"key": "currentUsername",
+							"value": "johnCena",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by username",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/find/johnDoe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"find",
+						"johnDoe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List all users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset pasword",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/resetPassword/johndoe@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"resetPassword",
+						"johndoe@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/delete/8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"delete",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user's profile image",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "johnDoe",
+							"type": "text"
+						},
+						{
+							"key": "profileImage",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/user/updateProfileImage",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"updateProfileImage"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
