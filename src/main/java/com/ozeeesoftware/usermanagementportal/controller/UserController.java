@@ -148,7 +148,7 @@ public class UserController extends ExceptionHandling {
         return Files.readAllBytes(Paths.get(FileConstant.USER_FOLDER+username+FileConstant.FORWARD_SLASH+fileName));
     }
 
-    @GetMapping(path = "/image/{profile}/{username}",produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(path = "/image/profile/{username}",produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getDefaultProfileImage(@PathVariable("username") String username) throws MalformedURLException,IOException {
         URL url=new URL(FileConstant.TEMP_PROFILE_IMAGE_BASE_URL+username);
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
