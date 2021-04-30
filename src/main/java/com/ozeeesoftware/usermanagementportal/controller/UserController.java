@@ -134,7 +134,7 @@ public class UserController extends ExceptionHandling {
         return response(HttpStatus.NO_CONTENT,"User deleted successfully");
     }
 
-    @PostMapping("/updateProfileImage")
+    @PostMapping("/")
     public ResponseEntity<User> updateProfileImage(@RequestParam("username")String username,
                                                    @RequestParam(value = "profileImage") MultipartFile profileImage) throws UserNotFoundException, UsernameExistsException, EmailExistsException, IOException {
 
