@@ -1,8 +1,7 @@
 package com.ozeeesoftware.usermanagementportal.service;
 
-import com.ozeeesoftware.usermanagementportal.constant.FileConstant;
 import com.ozeeesoftware.usermanagementportal.constant.Role;
-import com.ozeeesoftware.usermanagementportal.constant.UserImplConstant;
+import com.ozeeesoftware.usermanagementportal.exception.model.NotAnImageFileException;
 import com.ozeeesoftware.usermanagementportal.exception.model.EmailExistsException;
 import com.ozeeesoftware.usermanagementportal.exception.model.EmailNotFoundException;
 import com.ozeeesoftware.usermanagementportal.exception.model.UserNotFoundException;
@@ -12,6 +11,7 @@ import com.ozeeesoftware.usermanagementportal.model.UserPrincipal;
 import com.ozeeesoftware.usermanagementportal.repository.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +32,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.ozeeesoftware.usermanagementportal.constant.FileConstant.*;
 import static com.ozeeesoftware.usermanagementportal.constant.Role.ROLE_USER;
 import static com.ozeeesoftware.usermanagementportal.constant.UserImplConstant.*;
+import static org.springframework.http.MediaType.*;
 
 @Service
 @Transactional
@@ -106,7 +107,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public User addNewUser(String firstName, String lastName, String username, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsernameExistsException, UserNotFoundException, EmailExistsException, IOException {
+    public User addNewUser(String firstName, String lastName, String username, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsernameExistsException, UserNotFoundException, EmailExistsException, IOException, NotAnImageFileException {
         validateNewUsernameAndEmail(StringUtils.EMPTY,username,email);
         User user=new User();
         user.setUserId(generateUserId());
@@ -130,7 +131,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsernameExistsException, UserNotFoundException, EmailExistsException, IOException {
+    public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsernameExistsException, UserNotFoundException, EmailExistsException, IOException, NotAnImageFileException {
         User currentUser=validateNewUsernameAndEmail(currentUsername,newUsername,newEmail);
         currentUser.setFirstName(newFirstName);
         currentUser.setLastName(newLastName);
@@ -146,8 +147,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void deleteUser(long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(String username) throws IOException {
+        User user= userRepository.findUserByUsername(username);
+        Path userFolder=Paths.get(USER_FOLDER+user.getUsername()).toAbsolutePath().normalize();
+        FileUtils.deleteDirectory(new File(userFolder.toString()));
+        userRepository.deleteById(user.getId());
     }
 
     @Override
@@ -164,7 +168,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateProfileImage(String username, MultipartFile profileImage) throws UsernameExistsException, UserNotFoundException, EmailExistsException, IOException {
+    public User updateProfileImage(String username, MultipartFile profileImage) throws UsernameExistsException, UserNotFoundException, EmailExistsException, IOException, NotAnImageFileException {
         User user=validateNewUsernameAndEmail(username,null,null);
         saveProfileImage(user,profileImage);
         return user;
@@ -250,21 +254,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     }
 
-    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
+    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException {
 
-        if(profileImage!=null){
-            Path userFolder= Paths.get(USER_FOLDER+user.getUsername()).toAbsolutePath().normalize();
-            if(!Files.exists(userFolder)){
-                Files.createDirectories(userFolder);
-                LOGGER.info(DIRECTORY_CREATED+userFolder);
+        if(profileImage!=null) {
+            if (!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())) {
+                throw new NotAnImageFileException(profileImage.getOriginalFilename()+" is not an image  file." +
+                        " Please upload an image file.");
             }
-            Files.deleteIfExists(Paths.get(userFolder+user.getUsername()+DOT+JPG_EXTENSION));
-            Files.copy(profileImage.getInputStream(),userFolder.resolve(user.getUsername()+DOT+JPG_EXTENSION),StandardCopyOption.REPLACE_EXISTING);
-            user.setProfileImageUrl(setProfileImageUrl(user.getUsername()));
-            userRepository.save(user);
-            LOGGER.info(FILE_SAVED_IN_FILE_SYSTEM+profileImage.getOriginalFilename());
+                Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
+                if (!Files.exists(userFolder)) {
+                    Files.createDirectories(userFolder);
+                    LOGGER.info(DIRECTORY_CREATED + userFolder);
+                }
+                Files.deleteIfExists(Paths.get(userFolder + user.getUsername() + DOT + JPG_EXTENSION));
+                Files.copy(profileImage.getInputStream(), userFolder.resolve(user.getUsername() + DOT + JPG_EXTENSION), StandardCopyOption.REPLACE_EXISTING);
+                user.setProfileImageUrl(setProfileImageUrl(user.getUsername()));
+                userRepository.save(user);
+                LOGGER.info(FILE_SAVED_IN_FILE_SYSTEM + profileImage.getOriginalFilename());
 
-        }
+            }
+
 
     }
 

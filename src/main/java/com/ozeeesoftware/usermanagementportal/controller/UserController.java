@@ -3,10 +3,7 @@ package com.ozeeesoftware.usermanagementportal.controller;
 import com.ozeeesoftware.usermanagementportal.constant.FileConstant;
 import com.ozeeesoftware.usermanagementportal.constant.SecurityConstant;
 import com.ozeeesoftware.usermanagementportal.exception.ExceptionHandling;
-import com.ozeeesoftware.usermanagementportal.exception.model.EmailExistsException;
-import com.ozeeesoftware.usermanagementportal.exception.model.EmailNotFoundException;
-import com.ozeeesoftware.usermanagementportal.exception.model.UserNotFoundException;
-import com.ozeeesoftware.usermanagementportal.exception.model.UsernameExistsException;
+import com.ozeeesoftware.usermanagementportal.exception.model.*;
 import com.ozeeesoftware.usermanagementportal.model.HttpResponse;
 import com.ozeeesoftware.usermanagementportal.model.User;
 import com.ozeeesoftware.usermanagementportal.model.UserPrincipal;
@@ -76,7 +73,7 @@ public class UserController extends ExceptionHandling {
                                            @RequestParam("role") String role,
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage",required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistsException, EmailExistsException, IOException {
+                                           @RequestParam(value = "profileImage",required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistsException, EmailExistsException, IOException, NotAnImageFileException {
 
         User newUser=userService.addNewUser(firstName,lastName,username,email,role,Boolean.parseBoolean(isNonLocked),Boolean.parseBoolean(isActive),profileImage);
         return new ResponseEntity<User>(newUser,HttpStatus.OK);
@@ -92,7 +89,7 @@ public class UserController extends ExceptionHandling {
                                        @RequestParam("role") String role,
                                        @RequestParam("isActive") String isActive,
                                        @RequestParam("isNonLocked") String isNonLocked,
-                                       @RequestParam(value = "profileImage",required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistsException, EmailExistsException, IOException {
+                                       @RequestParam(value = "profileImage",required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistsException, EmailExistsException, IOException, NotAnImageFileException {
 
         User updatedUser=userService.updateUser(currentUsername,firstName,lastName,username,email,role,Boolean.parseBoolean(isNonLocked),Boolean.parseBoolean(isActive),profileImage);
         return new ResponseEntity<User>(updatedUser,HttpStatus.OK);
@@ -127,16 +124,16 @@ public class UserController extends ExceptionHandling {
 
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{username}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("id") long id){
-        userService.deleteUser(id);
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
+        userService.deleteUser(username);
         return response(HttpStatus.OK,"User deleted successfully");
     }
 
     @PostMapping("/updateProfileImage")
     public ResponseEntity<User> updateProfileImage(@RequestParam("username")String username,
-                                                   @RequestParam(value = "profileImage") MultipartFile profileImage) throws UserNotFoundException, UsernameExistsException, EmailExistsException, IOException {
+                                                   @RequestParam(value = "profileImage") MultipartFile profileImage) throws UserNotFoundException, UsernameExistsException, EmailExistsException, IOException, NotAnImageFileException {
 
         User updatedUser=userService.updateProfileImage(username,profileImage);
         return new ResponseEntity<User>(updatedUser,HttpStatus.OK);

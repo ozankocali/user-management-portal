@@ -1,10 +1,7 @@
 package com.ozeeesoftware.usermanagementportal.exception;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.ozeeesoftware.usermanagementportal.exception.model.EmailExistsException;
-import com.ozeeesoftware.usermanagementportal.exception.model.EmailNotFoundException;
-import com.ozeeesoftware.usermanagementportal.exception.model.UserNotFoundException;
-import com.ozeeesoftware.usermanagementportal.exception.model.UsernameExistsException;
+import com.ozeeesoftware.usermanagementportal.exception.model.*;
 import com.ozeeesoftware.usermanagementportal.model.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,11 +102,11 @@ public class ExceptionHandling implements ErrorController {
         return createHttpResponse(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MSG);
     }
 
-    /*@ExceptionHandler(NotAnImageFileException.class)
+    @ExceptionHandler(NotAnImageFileException.class)
     public ResponseEntity<HttpResponse> notAnImageFileException(NotAnImageFileException exception) {
         LOGGER.error(exception.getMessage());
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
-    }*/
+    }
 
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> notFoundException(NoResultException exception) {
